@@ -1,0 +1,470 @@
+#!/usr/local/bin/lua
+
+print("Hello World！")
+print("www.w3cschool.cc")
+--[[
+ 多行注释
+ 多行注释
+ --]]
+ --单行注释
+ 
+--[[数据类型	描述
+nil	          这个最简单，只有值nil属于该类，表示一个无效值（在条件表达式中相当于false）。
+boolean	      包含两个值：false和true。
+number	      表示双精度类型的实浮点数
+string      	字符串由一对双引号或单引号来表示
+function    	由 C 或 Lua 编写的函数
+userdata	    表示任意存储在变量中的C数据结构
+thread	      表示执行的独立线路，用于执行协同程序
+table	        Lua 中的表（table）其实是一个"关联数组"（associative arrays），
+                数组的索引可以是数字或者是字符串。
+                在 Lua 里，table 的创建是通过"构造表达式"来完成，
+                最简单构造表达式是{}，用来创建一个空表。
+--]]
+
+function joke()
+    c = 5           -- 全局变量
+    local d = 6     -- 局部变量
+    c, d = d, c     -- 补nil 或 忽略
+end
+
+--循环
+while(condition)
+do
+   statements
+end
+for i=10,1,-1 do --从10到1，以-1为步长，-1可选，默认1
+    print(i)
+end
+days = {"Suanday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"}  
+for i,v in ipairs(days) do  print(v) end --泛型for循环，依次输出数组
+--ipairs是Lua提供的一个迭代器函数，用来迭代数组
+repeat
+   print("a的值为:", a)
+   a = a + 1
+until( a > 15 )
+--break语句将停止最内层循环的执行，并开始执行的外层的循环语句
+
+
+--流程控制
+if( a < 20 )
+then
+   print("a 小于 20" )--[ if 条件为 true 时打印以下信息 --]
+elseif( a == 20 )
+then   
+   print("a 的值为 20" ) --[ if else if 条件为 true 时打印以下信息 --]
+else
+   print("a 大于 20" )--[ if 条件为 false 时执行该语句块 --]
+end
+
+--函数
+local function maximum (a)
+  local mi = 1             -- 最大值索引
+  local m = a[mi]          -- 最大值
+  for i,val in ipairs(a) do
+     if val > m then
+         mi = i
+         m = val
+     end
+  end
+  return m, mi
+end
+
+function average(...)--可变参数
+   result = 0
+   local arg={...}
+   for i,v in ipairs(arg) do
+      result = result + v
+   end
+   print("总共传入 " .. #arg .. " 个数")
+   return result/#arg
+end
+
+--运算符
+^     --幂运算
+and or not --逻辑运算
+..	  --连接两个字符串	a..b ，其中 a 为 "Hello " ， b 为 "World", 输出结果为 "Hello World"。
+#	    --一元运算符，返回字符串或表的长度。	#"Hello" 返回 5
+
+
+--字符串
+string1 = "Lua"
+string2 = 'w3cschool.cc'
+string3 = [["Lua 教程"]]
+
+--数组
+array = {"Lua", "Tutorial"}
+
+for i= -2, 2 do
+   array[i] = i *2 --索引可以是负数，赋值时自动分配空间
+end
+
+--迭代器
+array = {"Lua", "Tutorial"}
+
+for key,value in ipairs(array) 
+do
+   print(key, value)
+end
+首先，初始化，计算in后面表达式的值，表达式应该返回范性for需要的三个值：
+迭代函数、状态常量、控制变量；
+与多值赋值一样，如果表达式返回的结果个数不足三个会自动用nil补足，多出部分会被忽略。
+第二，将状态常量和控制变量作为参数调用迭代函数
+（注意：对于for结构来说，状态常量没有用处，
+仅仅在初始化时获取他的值并传递给迭代函数）。
+第三，将迭代函数返回的值赋给变量列表。
+第四，如果返回的第一个值为nil循环结束，否则执行循环体。
+第五，回到第二步再次调用迭代函数
+
+--无状态的迭代器
+function square(iteratorMaxCount,currentNumber)
+   if currentNumber<iteratorMaxCount
+   then
+      currentNumber = currentNumber+1
+   return currentNumber, currentNumber*currentNumber
+   end
+end
+
+for i,n in square,3,0  --从1到3 因为0在初始化时跳过了
+do
+   print(i,n) 
+end
+--多状态的迭代器
+array = {"Lua", "Tutorial"}
+
+function elementIterator (collection) 
+--elementIterator 内使用了闭包函数，实现计算集合大小并输出各个元素
+   local index = 0
+   local count = #collection
+   -- 闭包函数
+   return function ()
+      index = index + 1
+      if index <= count
+      then
+         --  返回迭代器的当前元素
+         return collection[index]
+      end
+   end
+end
+
+for element in elementIterator(array)
+do
+   print(element)
+end
+
+--表
+--数组就是表
+table1 = {"d"}
+table2 = table1 --引用
+--concat() 方法来连接两个 table:
+
+fruits = {"banana","orange","apple"}
+print("bananaorangeapple ",table.concat(fruits))   --直接连接
+print("banana, orange, apple ",table.concat(fruits,", ")) --字符连接
+print("orange, apple ",table.concat(fruits,", ", 2,3))  -- 指定索引来连接 table
+
+table.insert(fruits,"mango") -- 在末尾插入
+print("索引为 4 的元素为 ",fruits[4])
+
+
+table.insert(fruits,2,"grapes") -- 在索引为 2 的键处插入
+print("索引为 2 的元素为 ",fruits[2])
+
+print("最后一个元素为 ",fruits[5])
+table.remove(fruits)  --移除
+print("移除后最后一个元素为 ",fruits[5])
+
+table.sort(fruits) --按字母排序
+
+--模块
+--模块也是表
+-- 文件名为 module.lua
+-- 定义一个名为 module 的模块
+module = {}
+ 
+-- 定义一个常量
+module.constant = "这是一个常量"
+ 
+-- 定义一个函数
+function module.func1()
+    io.write("这是一个公有函数！\n")
+end
+ 
+local function func2()
+    print("这是一个私有函数！")
+end
+ 
+function module.func3()
+    func2()
+end
+ 
+return module
+
+-- test_module2.lua 文件
+-- module 模块为上文提到到 module.lua
+-- 别名变量 m，否则用模块名
+local m = require("module") 
+--加载一个模块，用require，require("<模块名>")或require "<模块名>"
+
+print(m.constant)
+ 
+m.func3()
+--加载C包
+local path = "/usr/local/lua/lib/libluasocket.so"
+-- 或者 path = "C:\\windows\\luasocket.dll"，这是 Window 平台下
+local f = assert(loadlib(path, "luaopen_socket"))
+f()  -- 真正打开库
+
+
+--原表
+mytable = {}                          -- 普通表 
+mymetatable = {}                      -- 元表
+setmetatable(mytable,mymetatable)     -- 把 mymetatable 设为 mytable 的元表 
+getmetatable(mytable)                 -- 这回返回mymetatable
+
+mytable = setmetatable({key1 = "value1"}, {-- __index元方法
+--通过键来访问 table 的时候，如果这个键没有值，
+--那么Lua就会寻找该table的metatable（假定有metatable）中的__index 键
+    if key == "key2" then
+  __index = function(mytable, key)  
+  --如果__index包含一个函数的话，Lua就会调用那个函数，table和键会作为参数传递给函数。
+      return "metatablevalue"
+    else
+      return nil
+    end
+  end
+})
+--上面代码等价于下面这个
+mytable = setmetatable({key1 = "value1"},
+       { __index = { key2 = "metatablevalue" } })
+
+
+-- __newindex 元方法
+-- __newindex 元方法用来对表更新，__index则用来对表访问
+mytable = setmetatable({key1 = "value1"}, { __newindex = mymetatable })
+print(mytable.key1)
+
+mytable.newkey = "新值2"
+print(mytable.newkey, mymetatable.newkey)
+--设置了元方法 __newindex，在对新索引键（newkey）赋值时，会调用元方法，而不进行赋值
+
+mytable.key1 = "新值1"
+print(mytable.key1,mymetatable.key1)
+--如果对已存在的索引键（key1），则会进行赋值，而不调用元方法 __newindex
+----
+-- 自定义计算表中最大值函数 table_maxn
+function table_maxn(t)
+    local mn = 0
+    for k, v in pairs(t) do
+        if mn < k then
+            mn = k
+        end
+    end
+    return mn
+end
+
+-- 两表相加操作
+mytable = setmetatable({ 1, 2, 3 }, {
+  __add = function(mytable, newtable)
+    for i = 1, table_maxn(newtable) do
+      table.insert(mytable, table_maxn(mytable)+1,newtable[i])
+    end
+    return mytable
+  end
+})
+
+secondtable = {4,5,6}
+
+mytable = mytable + secondtable
+for k,v in ipairs(mytable) do
+  print(k,v)
+end
+--[[
+__add	对应的运算符 '+'.
+__sub	对应的运算符 '-'.
+__mul	对应的运算符 '*'.
+__div	对应的运算符 '/'.
+__mod	对应的运算符 '%'.
+__unm	对应的运算符 '-'.
+__concat	对应的运算符 '..'.
+__eq	对应的运算符 '=='.
+__lt	对应的运算符 '<'.
+__le	对应的运算符 '<='.
+]]--
+
+-- __call 元方法
+--调用一个值时调用
+-- 定义元方法__call
+mytable = setmetatable({10}, {
+  __call = function(mytable, newtable)
+	sum = 0
+	for i = 1, table_maxn(mytable) do
+		sum = sum + mytable[i]
+	end
+    for i = 1, table_maxn(newtable) do
+		sum = sum + newtable[i]
+	end
+	return sum
+  end
+})
+newtable = {10,20,30}
+print(mytable(newtable)) --70
+
+-- __tostring 元方法
+--修改表的输出行为
+mytable = setmetatable({ 10, 20, 30 }, {
+  __tostring = function(mytable)
+    sum = 0
+    for k, v in pairs(mytable) do
+		sum = sum + v
+	end
+    return "表所有元素的和为 " .. sum
+  end
+})
+print(mytable) --表所有元素的和为 60
+
+
+
+--文件
+
+-- 以只读方式打开文件
+file = io.open("test.lua", "r")
+
+-- 设置默认输入文件为 test.lua
+io.input(file)
+
+-- 输出文件第一行
+print(io.read())
+
+-- 关闭打开的文件
+io.close(file)
+
+-- 以附加的方式打开只写文件
+file = io.open("test.lua", "a")
+
+-- 设置默认输出文件为 test.lua
+io.output(file)
+
+-- 在文件最后一行添加 Lua 注释
+io.write("--  test.lua 文件末尾注释")
+
+-- 关闭打开的文件
+io.close(file)
+
+
+
+--LUA中的类可以通过table + function模拟出来
+--继承可以通过metetable模拟出来
+
+
+Account = {balance = 0}
+function Account.withdraw (v)
+    Account.balance = Account.balance - v
+end
+Account.withdraw(100.00)  --类也是表。。。
+
+----
+-- Meta class
+Shape = {area = 0}
+-- 基础类方法 new
+function Shape:new (o,side)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  side = side or 0
+  self.area = side*side;
+  return o
+end
+-- 基础类方法 printArea
+function Shape:printArea ()
+  print("面积为 ",self.area)
+end
+
+-- 创建对象
+myshape = Shape:new(nil,10)
+myshape:printArea()
+
+Square = Shape:new()
+-- 派生类方法 new
+function Square:new (o,side)
+  o = o or Shape:new(o,side)
+  setmetatable(o, self)
+  self.__index = self
+  return o
+end
+
+-- 派生类方法 printArea
+function Square:printArea ()
+  print("正方形面积为 ",self.area)
+end
+
+-- 创建对象
+mysquare = Square:new(nil,10)
+mysquare:printArea()
+
+Rectangle = Shape:new()
+-- 派生类方法 new
+function Rectangle:new (o,length,breadth)
+  o = o or Shape:new(o)
+  setmetatable(o, self)
+  self.__index = self
+  self.area = length * breadth
+  return o
+end
+
+-- 派生类方法 printArea
+function Rectangle:printArea ()
+  print("矩形面积为 ",self.area)
+end
+
+-- 创建对象
+myrectangle = Rectangle:new(nil,10,20)
+myrectangle:printArea()
+
+
+-- Lua 中我们可以重写基础类的函数，在派生类中定义自己的实现方式：
+-- 派生类方法 printArea
+function Square:printArea ()
+  print("正方形面积 ",self.area)
+end
+
+
+
+-- Lua 数据库访问
+
+require "luasql.mysql"
+
+--创建环境对象
+env = luasql.mysql()
+
+--连接数据库
+conn = env:connect("数据库名","用户名","密码","IP地址",端口)
+
+--设置数据库的编码格式
+conn:execute"SET NAMES UTF8"
+
+--执行数据库操作
+cur = conn:execute("select * from role")
+
+row = cur:fetch({},"a")
+
+--文件对象的创建
+file = io.open("role.txt","w+");
+
+while row do
+    var = string.format("%d %s\n", row.id, row.name)
+
+    print(var)
+
+    file:write(var)
+
+    row = cur:fetch(row,"a")
+end
+
+
+file:close()  --关闭文件对象
+conn:close()  --关闭数据库连接
+env:close()   --关闭数据库环境
+
+
+
