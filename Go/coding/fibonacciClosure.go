@@ -14,10 +14,6 @@ func fibonacci() func() int {
 	var a = 0
 	var b = 1
     return func() int{
-	    if a == 0 {
-		    a, b = a+b, a
-		    return 0
-		}
 		a, b = a+b, a
 	    return b
 	}
